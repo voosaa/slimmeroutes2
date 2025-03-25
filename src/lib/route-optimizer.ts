@@ -77,8 +77,9 @@ export async function optimizeRoute(addresses: Address[], startAddress?: Address
     totalDuration += travelDuration
     
     // Add time spent at the destination if specified
-    if (nearest?.time_spent !== undefined && nearest?.time_spent !== null) {
-      totalDuration += nearest.time_spent;
+    const currentStop = nearest;
+    if (currentStop && typeof currentStop.time_spent === 'number') {
+      totalDuration += currentStop.time_spent;
     }
   }
   
@@ -175,15 +176,18 @@ function optimizeRouteWithAppointments(addresses: Address[], startAddress?: Addr
     totalDuration += travelDuration;
     
     // Add time spent at the destination if specified
-    if (route[i]?.time_spent !== undefined && route[i]?.time_spent !== null) {
-      totalDuration += route[i].time_spent;
+    const currentStop = route[i];
+    if (currentStop && typeof currentStop.time_spent === 'number') {
+      totalDuration += currentStop.time_spent;
     }
   }
   
   // Add time spent at the last destination if specified
-  const lastStop = route[route.length - 1];
-  if (lastStop?.time_spent !== undefined && lastStop?.time_spent !== null) {
-    totalDuration += lastStop.time_spent;
+  if (route.length > 0) {
+    const lastStop = route[route.length - 1];
+    if (lastStop && typeof lastStop.time_spent === 'number') {
+      totalDuration += lastStop.time_spent;
+    }
   }
   
   return {
